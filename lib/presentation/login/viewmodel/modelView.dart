@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:tutapp/domain/useCase/login/use_case.dart';
 import 'package:tutapp/presentation/common/freezed.dart';
+import 'package:tutapp/presentation/common/stateRender/satate_render_impl.dart';
+import 'package:tutapp/presentation/common/stateRender/state_render_enum.dart';
 
 import '../../base/base_view_model.dart';
 
@@ -23,31 +25,33 @@ class LoginViewModel extends BaseViewModel
   // ------input
   @override
   void dispose() {
+    super.dispose();
     _nameStreamController.close();
     _passwordStreamController.close();
   }
 
   @override
   void start() {
-    // TODO: implement start
+    inputState.add(ContentState());
   }
 
   @override
   login() async {
+    inputState.add(LoadingState(stateRenderType: StateRenderType.popupLoadingState));
     (await _loginUseCase.execute(
         LoginUseCaseInput(loginObject.userName, loginObject.userPassword)))
         .fold(
             (left) =>
         {
           //left failure
-          print(left.message),
-          print(left.code)
+            inputState.add(ErrorState(stateRenderType: StateRenderType.popupErrorState,message: left.message))
         },
             (data) =>
         {
           //right ->data (success)
-
-          print(data.contact?.email)
+//content
+        inputState.add(ContentState())
+              //navigate to main screen
         });
   }
 

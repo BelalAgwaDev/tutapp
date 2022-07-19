@@ -8,10 +8,14 @@ import 'package:tutapp/data/network/app_api.dart';
 import 'package:tutapp/data/network/dioFactory.dart';
 import 'package:tutapp/data/network/network_info.dart';
 import 'package:tutapp/domain/repository/repository.dart';
+import 'package:tutapp/domain/useCase/forget/useCase.dart';
 import 'package:tutapp/domain/useCase/login/use_case.dart';
+import 'package:tutapp/domain/useCase/register/use_case.dart';
 import 'package:tutapp/presentation/login/viewmodel/modelView.dart';
 
 import '../data/repository/repostory_impl.dart';
+import '../presentation/forget_password/viewModel/view_model.dart';
+import '../presentation/register/viewmodel/viewModel.dart';
 
 final instance =GetIt.instance;
 Future<void>initAppModule()async{
@@ -43,10 +47,25 @@ Future<void>initAppModule()async{
 }
 
 
- initLoginModule(){
-  if(!GetIt.I.isRegistered<LoginUseCase>()){
-    instance.registerFactory<LoginUseCase>(() => LoginUseCase(instance()));
-    instance.registerFactory<LoginViewModel>(() => LoginViewModel(instance()));
+ initLoginModule() {
+   if (!GetIt.I.isRegistered<LoginUseCase>()) {
+     instance.registerFactory<LoginUseCase>(() => LoginUseCase(instance()));
+     instance.registerFactory<LoginViewModel>(() => LoginViewModel(instance()));
+   }
+ }
+
+  initForgetPasswordModule() {
+    if (!GetIt.I.isRegistered<ForgetPasswordUseCase>()) {
+      instance.registerFactory<ForgetPasswordUseCase>(() => ForgetPasswordUseCase(instance()));
+      instance.registerFactory<ForgetPasswordViewModel>(() =>
+          ForgetPasswordViewModel(instance()));
+    }
   }
 
+initRegisterModule() {
+  if (!GetIt.I.isRegistered<RegisterUseCase>()) {
+    instance.registerFactory<RegisterUseCase>(() => RegisterUseCase(instance()));
+    instance.registerFactory<RegisterViewModel>(() =>
+        RegisterViewModel(instance()));
+  }
 }

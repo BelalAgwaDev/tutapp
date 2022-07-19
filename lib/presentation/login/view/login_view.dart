@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tutapp/presentation/common/stateRender/satate_render_impl.dart';
 import 'package:tutapp/presentation/login/viewmodel/modelView.dart';
 import 'package:tutapp/presentation/resources/assest_manger.dart';
 import 'package:tutapp/presentation/resources/color_manger.dart';
@@ -6,6 +7,7 @@ import 'package:tutapp/presentation/resources/strings_manger.dart';
 import 'package:tutapp/presentation/resources/values_manger.dart';
 
 import '../../../application/di.dart';
+import '../../resources/routes_manger.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -22,8 +24,8 @@ class _LonginViewState extends State<LoginView> {
   _bind() {
     _viewModel.start();
     _userName.addListener(() => _viewModel.setUserName(_userName.text));
-    _userPassword.addListener(
-        () => _viewModel.setUserPassword(_userPassword.text));
+    _userPassword
+        .addListener(() => _viewModel.setUserPassword(_userPassword.text));
   }
 
   @override
@@ -34,7 +36,13 @@ class _LonginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return _getData();
+    return StreamBuilder<FlowState>(
+      stream: _viewModel.outputState,
+      builder: (context, snapshot) {
+        return snapshot.data?.getScreenWidget(context, _getData(), () {}) ??
+            _getData();
+      },
+    );
   }
 
   Widget _getData() {
@@ -111,14 +119,20 @@ class _LonginViewState extends State<LoginView> {
               Row(
                 children: [
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(Routes.forgetPasswordRoute);
+                      },
                       child: Text(
                         AppStringsManger.forgetpassword,
                         style: TextStyle(color: ColorManger.primary),
                       )),
                   const Spacer(),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(Routes.registerRoute);
+                      },
                       child: Text(
                         AppStringsManger.notamemberSignup,
                         style: TextStyle(color: ColorManger.primary),
